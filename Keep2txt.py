@@ -25,10 +25,24 @@ for path in pathlist:
   timestamp = data["userEditedTimestampUsec"]/1000000
   dt_object = datetime.utcfromtimestamp(timestamp)
   dateString = "{:%Y-%m-%dT%H:%M:%S.000Z}".format(dt_object)
+
+  textContent = ""
+  if 'textContent' in data:
+    textContent = data['textContent']
+  elif 'listContent' in data:
+    textContent = ""
+    for item in data['listContent']:
+      if(item["isChecked"]):
+        textContent = textContent + "- [x] "
+      else:
+        textContent = textContent + "- [ ] "
+
+      textContent = textContent + item["text"] + "\n"
+
   if not data['title']:
-    content = data['textContent']
-  else:
-    content = data['title'] + "\n" + data['textContent']
+    content = textContent
+  else: 
+    content = data['title'] + "\n" + textContent
 
   noteId = randomString(32)
   if (not data["isArchived"]) and (not data["isTrashed"]):

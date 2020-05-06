@@ -5,6 +5,7 @@ import random
 from datetime import datetime
 import sys
 import os
+import re
 
 stdout_fileno = sys.stdout
 sys.stdout = open('output.json', "w")
@@ -44,7 +45,10 @@ for path in pathlist:
       content_list.insert(0, "{:%Y/%m/%d}".format(dt_object))
 
     content="\n".join(content_list)
+
+    tags = re.findall(r"#([a-zA-Z]+[a-zA-Z])#", content)  
+
     noteId = data["noteEntity"]["identifier"]
-    output["activeNotes"].append({"id": noteId, "content": content, "creationDate" : creationDate, "lastModified": modificationDate})
+    output["activeNotes"].append({"id": noteId, "content": content, "creationDate" : creationDate, "lastModified": modificationDate, "tags" : tags})
 
 sys.stdout.write(json.dumps(output))
